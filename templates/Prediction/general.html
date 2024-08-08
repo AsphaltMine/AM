@@ -1,0 +1,13 @@
+        <section class="tab-content" id="tab-general">
+            <div class="card">
+                <header>
+                    <h1>General Information</h1>
+                    <p>Welcome to the AsphaltMine Prediction Dashboard.</p>
+                    <p>Here you can check the latest asphalt predictive models available to users.</p>
+                    <p>The tool and models are continuously updated. New functionalities will be added in the future.</p>
+                </header>
+                {% if citation_references %}
+                <p class="cite-note">{{ citation_models_before }}<a href="{{ citation_models_url }}">{{ citation_models_link_text }}</a>{{ citation_models_after }}</p>
+                {% endif %}
+            </div>
+        </section>
