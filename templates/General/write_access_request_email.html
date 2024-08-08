@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Write access request</title>
+</head>
+<body>
+Dear Administrator,
+<br><br>
+The user <strong>{{ requester.username }}</strong> ({{ requester.email }}) requests write access on AsphaltMine.<br>
+{% if requester.first_name or requester.last_name %}Name: {{ requester.first_name }} {{ requester.last_name }}<br>{% endif %}
+Date joined: {{ requester.date_joined|date:"N j, Y" }}
+<br><br>
+<strong>Organization:</strong> {{ organization }}<br>
+<strong>Country:</strong> {{ country }}<br>
+<strong>Standards followed:</strong> {{ standard }}{% if standard == "Other" and standard_other %} ({{ standard_other }}){% endif %}<br>
+<strong>Description:</strong><br>
+{{ reason|linebreaksbr }}
+<br><br>
+To accept or deny the request, open <a href="{{ requests_url }}">User requests</a> in the admin.
+<br><br>
+</body>
+</html>

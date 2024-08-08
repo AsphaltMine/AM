@@ -1,0 +1,15 @@
+{% autoescape off %}Dear Administrator,
+
+The user {{ requester.username }} ({{ requester.email }}) requests write access on AsphaltMine.
+{% if requester.first_name or requester.last_name %}Name: {{ requester.first_name }} {{ requester.last_name }}
+{% endif %}Date joined: {{ requester.date_joined|date:"N j, Y" }}
+
+Organization: {{ organization }}
+Country: {{ country }}
+Standards followed: {{ standard }}{% if standard == "Other" and standard_other %} ({{ standard_other }}){% endif %}
+Description:
+{{ reason }}
+
+To accept or deny the request, open User requests in the admin:
+{{ requests_url }}
+{% endautoescape %}
