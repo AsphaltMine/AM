@@ -245,3 +245,5 @@ venv/
 # Celery files
 celerybeat-schedule.*
 
+# Scopus source title list
+Publications/data/*.xlsx

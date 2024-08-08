@@ -1,0 +1,9 @@
+CITE_BEFORE = "If you use AsphaltMine data or tools in your work, please cite the foundation paper listed on the "
+CITE_AFTER = " and acknowledge the data contributors."
+MODELS_BEFORE = "If you use the prediction models, please cite the corresponding model paper listed on the "
+MODELS_LINK_TEXT = "Publications page"
+MODELS_AFTER = "."
+VISUAL_BEFORE = "If you use the visualization, please cite the foundation paper listed on the "
+LINK_TEXT = "Publications page"
+CITE_REQUEST_SHORT = CITE_BEFORE + LINK_TEXT + CITE_AFTER
+SHEET_NAME = "How to cite"
