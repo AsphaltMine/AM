@@ -1,0 +1,54 @@
+{% load static %}
+
+<p class="screen-message">
+    <b style="font-size: 200%;">ALERT</b>
+    <br><br>Your screen size is too small to display the form properly.
+    <br><br>The form requires a minimum screen width of <b>800 pixels</b> to function properly and <b>1400 pixels</b> to ensure full functionality.
+    <br><br>Please try accessing it from a device with a larger screen or increase the size of your current screen for optimal viewing.
+</p>
+
+<div id="explpopup" class="Expl-popup">
+    <div class="Expl-popup-container">
+        <span class="Expl-popup-close">&times;</span>
+        <p id="main-message" style="margin-top:23px;"></p>
+    </div>
+</div>
+
+<div id="quickstartpopup" class="Expl-popup">
+    <div class="quickstart-popup-container">
+        <span class="quickstart-popup-close">&times;</span>
+        <div id="quick-start" style="display: none;">
+            <h3 class="qs-title">Quick Start</h3>
+            <p class="qs-subtitle">Upload many records at once from an Excel sheet.</p>
+            <ol class="qs-steps">
+                <li>Download the predefined Excel template with the <b>here</b> link in the <b>About this page</b> box, and fill in your data.</li>
+                <li>Click <b>Upload AsphaltMine Excel File</b> and select your completed file.</li>
+                <li>Under <b>Sheet</b>, choose <b>Database (Columns)</b> or <b>Database (Rows)</b>, whichever matches your file.</li>
+                <li>Click <b>Extract</b>, then <b>Confirm</b>.</li>
+                <li>When the extraction is successful, click <b>Validate</b>, then <b>Confirm</b>.</li>
+                <li>If all records are valid, choose a workspace if you want one, or keep the records private.</li>
+                <li>Click <b>Save</b>, then <b>Confirm</b>.</li>
+            </ol>
+            <h4 class="qs-heading">Good to know</h4>
+            <ul class="qs-tips">
+                <li>One row with results for more than one test creates one record per test.</li>
+                <li>If some records are invalid, correct your Excel file and upload it again.</li>
+                <li>Saving needs write access, which you can request from My Profile.</li>
+            </ul>
+            <div class="qs-actions">
+                <a class="qs-btn qs-btn-primary" href="{% url 'core_website_app_help' %}#cat-bulk">More in the FAQ</a>
+                <button type="button" class="qs-btn qs-btn-secondary" id="qs-ask-btn">Ask AsphaltMine</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="Confirmationpopup">
+    <div id="Confirmation-popup-container">
+        <h3 id="ConfirmationMessage"></h3>
+        <div class="buttons-grp">
+            <button type="button" id="Cancel-ConfirmationMessage">Cancel</button>
+            <button type="button" id="Confirm-ConfirmationMessage">Confirm</button>  
+        </div>
+    </div>
+</div>
