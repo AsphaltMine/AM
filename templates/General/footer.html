@@ -1,0 +1,12 @@
+{% load static %}
+<div id="footer">
+    <div class="footer-flex">
+        <a href="https://asphaltmine.org/" title="AsphaltMine" class="footer-brand"><img src="{% static 'img/favicon.png' %}" alt="" class="footer-logo"><span>AsphaltMine</span></a>
+        <div id="footer-right">
+            <div id="copyright">
+                <span>&copy; 2025-{% now "Y" %} AsphaltMine<span class="footer-version">v{{ APP_VERSION }}</span></span>
+            </div>
+            {% include 'core_website_app/user/footer_menu.html' %}
+        </div>
+    </div>
+</div>
