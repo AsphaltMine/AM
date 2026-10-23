@@ -1,0 +1,37 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/General/assistant.css' %}">
+<div id="am-assistant" data-chat-url="{% url 'assistant_chat' %}">
+    {% csrf_token %}
+    <button id="am-assistant-toggle" class="am-assistant-toggle" type="button" aria-expanded="false" aria-controls="am-assistant-panel" aria-label="Open the AsphaltMine assistant">
+        <img class="am-assistant-logo am-assistant-logo-small" src="{% static 'img/favicon.png' %}" alt="">
+        <span class="am-assistant-toggle-label">Ask AsphaltMine</span>
+    </button>
+    <section id="am-assistant-panel" class="am-assistant-panel" role="dialog" aria-label="AsphaltMine assistant" hidden>
+        <div id="am-assistant-consent" class="am-assistant-consent" hidden>
+            <div class="am-assistant-consent-box">
+                <p>Your questions are shared with Google's Gemini AI to generate answers. Please do not share passwords or private and confidential information in this chat.</p>
+                <button type="button" id="am-assistant-consent-ok">OK, I understand</button>
+            </div>
+        </div>
+        <header class="am-assistant-header">
+            <div class="am-assistant-title">
+                <img class="am-assistant-logo" src="{% static 'img/favicon.png' %}" alt="">
+                <div>
+                    <strong>AsphaltMine</strong>
+                    <span>Assistant</span>
+                </div>
+            </div>
+            <div class="am-assistant-actions">
+                <button type="button" id="am-assistant-clear" title="Start a new chat" aria-label="Start a new chat"><i class="fas fa-redo"></i></button>
+                <button type="button" id="am-assistant-close" title="Close" aria-label="Close the assistant"><i class="fas fa-times"></i></button>
+            </div>
+        </header>
+        <div id="am-assistant-messages" class="am-assistant-messages" aria-live="polite"></div>
+        <form id="am-assistant-form" class="am-assistant-form" autocomplete="off">
+            <textarea id="am-assistant-input" rows="1" maxlength="1000" placeholder="Type your question" aria-label="Your question"></textarea>
+            <button type="submit" id="am-assistant-send" aria-label="Send"><i class="fas fa-paper-plane"></i></button>
+        </form>
+        <p class="am-assistant-note">AI answers can contain mistakes. Check important details.</p>
+    </section>
+</div>
+<script src="{% static 'js/General/assistant.js' %}" defer></script>
