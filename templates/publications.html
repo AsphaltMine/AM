@@ -1,0 +1,167 @@
+{% load static publication_cite %}
+
+{% block head %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Publications | AsphaltMine</title>
+{% endblock %}
+{% block theme_css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/Prediction.css' %}">
+    <link rel="stylesheet" href="{% static 'css/General/navigator.css' %}">
+    <link rel="stylesheet" href="{% static 'css/General/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Publications/publications.css' %}">
+{% endblock %}
+{% block theme_js %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'core_main_app/common/js/csrf.js' %}"></script>
+    <script src="{% static 'js/Publications/publications.js' %}" defer></script>
+    <script src="{% static 'js/Publications/citation.js' %}" defer></script>
+    {% if user.is_authenticated %}<script src="{% static 'js/Publications/submit.js' %}" defer></script>{% endif %}
+{% endblock %}
+
+{% block body %}
+
+    <div class="background"></div>
+
+    {% include "General/navigator.html" %}
+
+    <div class="tab-bar">
+        {% for tab in tabs %}
+        <button class="tab-btn{% if tab.key == active_tab %} active{% endif %}" data-tab="{{ tab.key }}">{{ tab.label }}</button>
+        {% endfor %}
+    </div>
+
+    <main>
+        {% for tab in tabs %}
+        <section class="tab-content{% if tab.key == active_tab %} active{% endif %}" id="tab-{{ tab.key }}">
+            <div class="card">
+                <header{% if tab.key == "studies" %} class="pub-header-action"{% endif %}>
+                    <h1>{{ tab.label }}</h1>
+                    {% if tab.key == "studies" %}
+                    {% if user.is_authenticated %}
+                    <button type="button" class="pub-submit-open">Submit a publication</button>
+                    {% else %}
+                    <button type="button" class="pub-submit-open" disabled title="Log in to submit a publication"><i class="fas fa-lock"></i> Submit a publication</button>
+                    {% endif %}
+                    {% endif %}
+                </header>
+                {% if tab.key == "studies" and tab.count > 8 %}
+                <div class="pub-toolbar">
+                    <div class="pub-filter-row">
+                        <div class="pub-field">
+                            <input type="search" class="pub-search" placeholder="Search papers..." autocomplete="off" aria-label="Search papers">
+                        </div>
+                        <div class="pub-field pub-tag-input">
+                            <div class="pub-tag-chips"></div>
+                            <input type="text" class="pub-tag-search" placeholder="Filter..." autocomplete="off" aria-label="Filter papers">
+                            <div class="pub-tag-dropdown" hidden></div>
+                            <ul class="pub-option-source" hidden>
+                                {% for usage in usage_options %}
+                                <li data-group="usage" data-group-label="Usage" data-value="{{ usage.id }}">{{ usage.name }}</li>
+                                {% endfor %}
+                                <li data-group="access" data-group-label="Access" data-value="open">Open access</li>
+                                {% for value, label in kind_choices %}
+                                <li data-group="kind" data-group-label="Type" data-value="{{ value }}">{{ label }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="pub-clear-row">
+                        <button type="button" class="pub-clear">Clear all</button>
+                    </div>
+                </div>
+                <p class="pub-none" hidden>No matching papers</p>
+                {% endif %}
+                {% for group in tab.groups %}
+                <section class="pub-group">
+                    {% if group.title %}
+                    <h3 class="pub-group-title">{{ group.title }}</h3>
+                    {% endif %}
+                    {% for paper in group.papers %}
+                    <article class="pub-card{% if tab.key == 'foundation' %} pub-card--featured{% elif tab.key == 'studies' %} pub-card--compact{% endif %}" data-kind="{{ paper.kind }}" data-access="{{ paper.access }}" data-search="{{ paper.title|lower }} {{ paper.authors|lower }} {{ paper.journal|lower }} {{ paper.year }}{% if paper.shows_abstract %} {{ paper.abstract|lower }}{% endif %}" data-usages="{% for usage in paper.usages.all %}{{ usage.id }} {% endfor %}">
+                        <h2 class="pub-title"><a href="{{ paper.url }}" target="_blank" rel="noopener noreferrer">{{ paper.title }}</a></h2>
+                        <p class="pub-authors">{{ paper.author_list|join:", " }}</p>
+                        <p class="pub-meta">{{ paper.journal }}, {{ paper.year }}{% if paper.volume %}, Volume {{ paper.volume }}{% endif %}{% if paper.article_number %}, {{ paper.article_number }}{% endif %}{% if tab.key == "studies" and paper.kind != "article" %}<span class="pub-kind">{{ paper.get_kind_display }}</span>{% endif %}</p>
+                        <div class="pub-row">
+                            <div class="pub-badges">
+                                {% if paper.access == "open" %}
+                                <span class="pub-badge pub-badge--open"><i class="fas fa-lock-open"></i> {{ paper.get_access_display }}</span>
+                                {% elif paper.access %}
+                                <span class="pub-badge"><i class="fas fa-lock"></i> {{ paper.get_access_display }}</span>
+                                {% endif %}
+                                {% if tab.key == "studies" %}
+                                {% for usage in paper.usages.all %}
+                                <span class="pub-badge pub-badge--usage">{{ usage.name }}</span>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="pub-actions">
+                                {% if paper.shows_abstract %}
+                                <button type="button" class="pub-toggle" aria-expanded="false">Show abstract</button>
+                                {% endif %}
+                                {% if tab.key == "foundation" %}
+                                <div class="cite-menu" data-text="{{ paper|reference }}" data-ris="{{ paper|ris }}" data-bibtex="{{ paper|bibtex }}">
+                                    <button type="button" class="cite-trigger" aria-haspopup="true" aria-expanded="false">Cite <i class="fas fa-chevron-down"></i></button>
+                                    <div class="cite-dropdown" hidden>
+                                        <button type="button" data-action="copy">Text</button>
+                                        <button type="button" data-action="ris">RIS</button>
+                                        <button type="button" data-action="bibtex">BibTeX</button>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <a class="pub-link" href="{{ paper.url }}" target="_blank" rel="noopener noreferrer">Read the paper <i class="fas fa-external-link-alt"></i></a>
+                            </div>
+                        </div>
+                        {% if paper.shows_abstract %}
+                        <div class="pub-abstract" hidden>{{ paper.abstract|linebreaks }}</div>
+                        {% endif %}
+                        {% if tab.key == "foundation" %}
+                        <p class="pub-cite-message">{{ citation_request }}</p>
+                        {% endif %}
+                    </article>
+                    {% endfor %}
+                </section>
+                {% empty %}
+                <p class="pub-empty">No publications published so far.</p>
+                {% endfor %}
+                {% if tab.key == "studies" and tab.count > 10 %}
+                <button type="button" class="pub-more" hidden>Show more</button>
+                {% endif %}
+            </div>
+        </section>
+        {% endfor %}
+    </main>
+
+    {% if user.is_authenticated %}
+    <div class="pub-modal" id="pub-submit-modal" hidden>
+        <div class="pub-modal-box" role="dialog" aria-modal="true" aria-labelledby="pub-submit-title">
+            <button type="button" class="pub-modal-close" aria-label="Close">&times;</button>
+            <h2 id="pub-submit-title">Submit a publication</h2>
+            <p class="pub-modal-intro">Enter the DOI of the publication. Automatic validation with Scopus will be done. Only work that used AsphaltMine data or the prediction models and cited AsphaltMine is listed.</p>
+            <form id="pub-submit-form" novalidate>
+                <label class="pub-field-label" for="pub-submit-doi">DOI <span class="pub-required" aria-hidden="true">*</span></label>
+                <input class="pub-field-input" id="pub-submit-doi" type="text" placeholder="10.1016/j.cscm.2026.e05829" autocomplete="off">
+                <ul class="pub-checks" hidden></ul>
+                <fieldset class="pub-fieldset">
+                    <legend class="pub-field-label">AsphaltMine resources used in the publication <span class="pub-required" aria-hidden="true">*</span></legend>
+                    {% for usage in usage_options %}
+                    <label class="pub-check"><input type="checkbox" name="usage" value="{{ usage.id }}"> {{ usage.name }}</label>
+                    {% endfor %}
+                </fieldset>
+                <label class="pub-field-label" for="pub-submit-note">Additional information (optional)</label>
+                <textarea class="pub-field-input" id="pub-submit-note" rows="3" maxlength="1000"></textarea>
+                <p class="pub-form-message" hidden></p>
+                <div class="pub-form-actions">
+                    <button type="button" class="pub-form-cancel">Cancel</button>
+                    <button type="submit" class="pub-form-send" disabled>Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    {% include "General/footer.html" %}
+    {% include "General/assistant.html" %}
+
+{% endblock %}

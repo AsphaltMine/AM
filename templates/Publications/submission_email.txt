@@ -1,0 +1,11 @@
+{{ submitter.get_username }} submitted a paper that used AsphaltMine.
+
+DOI: {{ doi }}
+Title: {{ title }}
+Journal: {{ journal }}
+Cites an AsphaltMine paper: {{ cites }}
+Indexed in Scopus: {{ scopus }}
+Used: {{ usages }}
+{% if note %}Note: {{ note }}
+{% endif %}
+Review it here: {{ review_url }}
